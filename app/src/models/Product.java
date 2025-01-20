@@ -9,11 +9,18 @@ public class Product {
 
 
     public Product(int id, String name, double price, int quantity, int minQuantity) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.minQuantity = minQuantity;
+        setId(id);
+        setName(name);
+        setPrice(price);
+        setQuantity(quantity);
+        setMinQuantity(minQuantity);
+    }
+
+    public Product(String name, double price, int quantity) {
+        setName(name);
+        setPrice(price);
+        setQuantity(quantity);
+        setMinQuantity(minQuantity);
     }
 
     public int getId() {
