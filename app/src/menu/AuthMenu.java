@@ -31,7 +31,11 @@ public class AuthMenu implements Menu {
                     System.out.print("Пароль: ");
                     String password = scanner.nextLine();
                     authService.login(username, password);
-                    ////////Тут должно проводиться проверка по authService.isLoggedIn() потом перекидываться на основное меню.
+                    if (authService.isLoggedIn()){
+                        MainMenu mainMenu = new MainMenu();
+                        mainMenu.onLoad();
+                    }
+
                     break;
 
                 case 2:
