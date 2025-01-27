@@ -22,6 +22,8 @@ public class AuthService {
 
     // Регистрация нового пользователя
     public void register(String username, String password, String role) {
+
+
         if (users.containsKey(username)) {
             System.out.println("Пользователь с таким именем уже существует.");
             return;
@@ -32,13 +34,16 @@ public class AuthService {
 
     // Вход в систему
     public boolean login(String username, String password) {
+
         User user = users.get(username);
         if (user == null || !user.getPassword().equals(password)) {
             System.out.println("Неверное имя пользователя или пароль.");
             return false;
         }
+
         currentUser = user;
         System.out.println("Вход выполнен: " + username);
+
         return true;
     }
 

@@ -30,8 +30,9 @@ public class User {
     }
 
     public boolean isAdmin() {
-        return "Admin".equalsIgnoreCase(role);
+        return role.equalsIgnoreCase("Admin");
     }
+
 }
 
 

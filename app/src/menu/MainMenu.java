@@ -1,5 +1,6 @@
 package menu;
 
+import menu.interfaces.Menu;
 import models.Warehouse;
 
 import models.Product;
@@ -78,7 +79,7 @@ public class MainMenu implements Menu {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
-                    warehouse.updateProduct();
+                    new UpdateMenu(warehouse).onLoad();
                     break;
 
                 case 7:

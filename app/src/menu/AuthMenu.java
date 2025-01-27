@@ -1,4 +1,5 @@
 package menu;
+import menu.interfaces.Menu;
 import services.AuthService;
 import java.util.Scanner;
 
@@ -35,7 +36,6 @@ public class AuthMenu implements Menu {
                         MainMenu mainMenu = new MainMenu();
                         mainMenu.onLoad();
                     }
-
                     break;
 
                 case 2:
