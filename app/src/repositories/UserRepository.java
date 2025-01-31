@@ -45,6 +45,24 @@ public class UserRepository implements IUserRepository  {
     @Override
     public User getUser(String username) {
         Connection con = null;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT id,username,password,role FROM users WHERE username=?";
+            PreparedStatement st = con.prepareStatement(sql);
+
+            st.setString(1, username);
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("role"));
+
+            }
+        } catch (SQLException e) {
+            System.out.println("sql error: " + e.getMessage());
+        }
 
         return null;
     }

@@ -14,13 +14,10 @@ public class Main {
         IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "new_password", "inventorymaster");
         db.getConnection();
 
-        AuthMenu authMenu = new AuthMenu();
-        authMenu.onLoad();
-
         IUserRepository userRepository = new UserRepository(db);
-        User user = new User("admin", "admin");
 
-        userRepository.registerUser(user);
+        User user = userRepository.getUser("admin");
+        System.out.println(user.toString());
 
         db.close();
     }
