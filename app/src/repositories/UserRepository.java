@@ -6,13 +6,14 @@ import repositories.interfaces.IUserRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserRepository implements IUserRepository  {
-    private final IDB dp;
+    private final IDB db;
 
-    public UserRepository(IDB dp) {
-        this.dp = dp;
+    public UserRepository(IDB db) {
+        this.db = db;
     }
 
 
@@ -21,7 +22,7 @@ public class UserRepository implements IUserRepository  {
         Connection conn = null;
 
         try {
-            conn = dp.getConnection();
+            conn = db.getConnection();
             if (conn == null) {
                 System.out.println("Connection is null");
                 return false;
@@ -43,6 +44,8 @@ public class UserRepository implements IUserRepository  {
 
     @Override
     public User getUser(String username) {
+        Connection con = null;
+
         return null;
     }
 }

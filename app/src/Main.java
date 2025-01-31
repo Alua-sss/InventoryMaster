@@ -17,6 +17,11 @@ public class Main {
         AuthMenu authMenu = new AuthMenu();
         authMenu.onLoad();
 
+        IUserRepository userRepository = new UserRepository(db);
+        User user = new User("admin", "admin");
+
+        userRepository.registerUser(user);
+
         db.close();
     }
 
