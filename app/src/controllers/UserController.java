@@ -1,6 +1,7 @@
 package controllers;
 
 import controllers.interfaces.IUserController;
+import models.User;
 import repositories.interfaces.IUserRepository;
 
 public class UserController implements IUserController {
@@ -11,12 +12,21 @@ public class UserController implements IUserController {
     }
 
     @Override
-    public String getUser(String username) {
-        return "";
+    public String registerUser(String username, String password) {
+        User user = new User(0, username, password, "USER");
+        boolean success = repo.registerUser(user);
+
+        return success ? "Пользователь успешно зарегистрирован!" : "Ошибка при регистрации пользователя.";
     }
 
+
     @Override
-    public String registerUser(String username, String password) {
-        return "";
+    public User getUser(String username) {
+        User user = repo.getUser(username);
+        if (user == null) {
+            System.out.println("Пользователь не найден");
+            return null;
+        }
+        return user;
     }
 }

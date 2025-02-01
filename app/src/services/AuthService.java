@@ -10,7 +10,9 @@ public class AuthService {
     private Map<String, User> users = new HashMap<>();
     private User currentUser = null;
 
-    private AuthService() {}
+
+    private AuthService() {
+    }
 
     public static AuthService getInstance() {
         if (instance == null) {
@@ -20,34 +22,18 @@ public class AuthService {
     }
 
 
-    // Регистрация нового пользователя
-    public void register(String username, String password, String role) {
-
-
-        if (users.containsKey(username)) {
-            System.out.println("Пользователь с таким именем уже существует.");
-            return;
-        }
-        users.put(username, new User(username, password, role));
-        System.out.println("Пользователь зарегистрирован: " + username);
-    }
-
-    // Вход в систему
-    public boolean login(String username, String password) {
-
-        User user = users.get(username);
+    public boolean login(User user, String password) {
         if (user == null || !user.getPassword().equals(password)) {
             System.out.println("Неверное имя пользователя или пароль.");
             return false;
         }
 
         currentUser = user;
-        System.out.println("Вход выполнен: " + username);
+        System.out.println("Вход выполнен: " + user.getUsername());
 
         return true;
     }
 
-    // Проверка авторизации
     public boolean isLoggedIn() {
         return currentUser != null;
     }
@@ -56,12 +42,10 @@ public class AuthService {
         return currentUser != null && currentUser.isAdmin();
     }
 
-    // Получение текущего пользователя
     public User getCurrentUser() {
         return currentUser;
     }
 
-    // Выход из системы
     public void logout() {
         if (currentUser != null) {
             System.out.println("Пользователь " + currentUser.getUsername() + " вышел из системы.");
