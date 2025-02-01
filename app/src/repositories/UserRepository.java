@@ -16,17 +16,48 @@ public class UserRepository implements IUserRepository  {
         this.db = db;
     }
 
-
     @Override
-    public boolean registerUser(User user) {
+    public boolean userExists(String username) {
         Connection conn = null;
-
         try {
             conn = db.getConnection();
             if (conn == null) {
                 System.out.println("Connection is null");
                 return false;
             }
+            String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
+            PreparedStatement st = conn.prepareStatement(sql);
+            st.setString(1, username);
+
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("sql error: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean registerUser(User user) {
+
+        if (userExists(user.getUsername())) {
+            return false;
+        }
+
+        Connection conn = null;
+
+        try {
+
+            conn = db.getConnection();
+
+            if (conn == null) {
+                System.out.println("Connection is null");
+                return false;
+            }
+
             String sql = "INSERT INTO users(username, password) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, user.getUsername());

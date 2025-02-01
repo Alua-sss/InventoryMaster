@@ -1,6 +1,8 @@
 package controllers.interfaces;
 
+import models.User;
+
 public interface IUserController {
-    String getUser(String username);
+    User getUser(String username);
     String registerUser(String username, String password);
 }

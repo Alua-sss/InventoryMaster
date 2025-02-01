@@ -1,19 +1,22 @@
 package menu;
+import controllers.interfaces.IUserController;
 import menu.interfaces.Menu;
 import services.AuthService;
 import java.util.Scanner;
 
 public class AuthMenu implements Menu {
 
+    private final IUserController userController;
+
+    public AuthMenu(IUserController userController) {
+        this.userController = userController;
+    }
+
     @Override
     public void onLoad() {
 
         AuthService authService = AuthService.getInstance();
         Scanner scanner = new Scanner(System.in);
-
-        // Тестовая подгрузка пользователей, потом надо удалить
-        authService.register("admin", "admin123", "Admin");
-        authService.register("user", "user123", "User");
 
         while (true) {
             System.out.println("1. Войти");
@@ -31,7 +34,9 @@ public class AuthMenu implements Menu {
                     String username = scanner.nextLine();
                     System.out.print("Пароль: ");
                     String password = scanner.nextLine();
-                    authService.login(username, password);
+
+                    authService.login(userController.getUser(username), password);
+
                     if (authService.isLoggedIn()){
                         MainMenu mainMenu = new MainMenu();
                         mainMenu.onLoad();
@@ -43,8 +48,8 @@ public class AuthMenu implements Menu {
                     String newUsername = scanner.nextLine();
                     System.out.print("Пароль: ");
                     String newPassword = scanner.nextLine();
-                    String role = scanner.nextLine();
-                    authService.register(newUsername, newPassword, role);
+
+                    userController.registerUser(newUsername, newPassword);
                     break;
 
                 case 3:
