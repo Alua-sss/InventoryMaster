@@ -6,10 +6,14 @@ import menu.interfaces.Menu;
 import models.Warehouse;
 
 import models.Product;
+import repositories.CategoryRepository;
 import repositories.ProductRepository;
+import repositories.interfaces.ICategoryRepository;
 import repositories.interfaces.IProductRepository;
 import services.AuthService;
+import services.CategoryService;
 import services.ProductService;
+import services.interfaces.ICategoryService;
 import services.interfaces.IProductService;
 
 import java.util.Scanner;
@@ -22,11 +26,13 @@ public class MainMenu implements Menu {
 
         IProductRepository productRepository = new ProductRepository();
         IProductService productService = new ProductService(productRepository);
-        IProductController productController = new ProductController(productService);
+        ICategoryRepository categoryRepository = new CategoryRepository();
+        ICategoryService categoryService = new CategoryService(categoryRepository);
+
+        IProductController productController = new ProductController(productService, categoryService);
 
         AuthService authService = AuthService.getInstance();
 
-        Warehouse warehouse = new Warehouse();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {

@@ -1,17 +1,22 @@
 package controllers;
 
 import controllers.interfaces.IProductController;
+import models.Category;
 import models.Product;
+import services.CategoryService;
+import services.interfaces.ICategoryService;
 import services.interfaces.IProductService;
 import java.util.List;
 import java.util.Scanner;
 
 public class ProductController implements IProductController {
 
-    private final IProductService service;
+    private final IProductService productService;
+    private final ICategoryService categoryService;
 
-    public ProductController(IProductService service) {
-        this.service = service;
+    public ProductController(IProductService productService, ICategoryService categoryService) {
+        this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -24,7 +29,21 @@ public class ProductController implements IProductController {
         int quantity = scanner.nextInt();
         System.out.print("Введите цену: ");
         double price = scanner.nextDouble();
-        if (service.addProduct(new Product(name, price, quantity))) {
+
+        System.out.println("Список категорий:");
+        System.out.println("*********************************************************************");
+        System.out.println("Выберите id:");
+        List<Category> categories = categoryService.getAllCategories();
+        for (Category category : categories) {
+            System.out.println(category.getId() + ": " + category.getName());
+        }
+        System.out.println("*********************************************************************");
+
+        int categoryId = scanner.nextInt();
+        scanner.nextLine();
+        Category category = categoryService.getCategoryById(categoryId);
+
+        if (productService.addProduct(new Product(name, price, quantity, category))) {
             System.out.println("Продукт был создан");
         } else {
             System.out.println("Ошибка");
@@ -38,9 +57,9 @@ public class ProductController implements IProductController {
         System.out.println("\n*********************************************************************");
         System.out.print("Введите id: ");
         int id = scanner.nextInt();
-        Product product = service.getProductById(id);
+        Product product = productService.getProductById(id);
         if (product != null) {
-            System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity());
+            System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + " Категория: " + product.getCategory().getName());
         } else {
             System.out.println("Ошибка");
         }
@@ -50,12 +69,12 @@ public class ProductController implements IProductController {
     @Override
     public void getAllProducts() {
         List<Product> products;
-        products = service.getAllProducts();
+        products = productService.getAllProducts();
         System.out.println("\n*********************************************************************");
         if (!products.isEmpty()) {
             System.out.println("Список продуктов:");
             for (Product product : products) {
-                System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity());
+                System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + "Категория: " + product.getCategory().getName());
             }
         } else {
             System.out.println("Список пуст");
@@ -69,8 +88,8 @@ public class ProductController implements IProductController {
         Scanner scanner = new Scanner(System.in);
         int id = scanner.nextInt();
         scanner.nextLine();
-        Product currentProduct = service.getProductById(id);
-        service.updateProduct(currentProduct);
+        Product currentProduct = productService.getProductById(id);
+        productService.updateProduct(currentProduct);
 
         if (currentProduct == null) {
             System.out.println("Товар с ID " + id + " не найден.");
@@ -104,7 +123,7 @@ public class ProductController implements IProductController {
                     currentProduct.setPrice(price);
                     break;
                 case 4:
-                    service.updateProduct(currentProduct);
+                    productService.updateProduct(currentProduct);
                     return;
                 default:
                     break;
@@ -117,7 +136,7 @@ public class ProductController implements IProductController {
         System.out.println("\n*********************************************************************");
         System.out.print("Введите id: ");
         int id = scanner.nextInt();
-        if(service.deleteProduct(id)){
+        if(productService.deleteProduct(id)){
             System.out.println("Товар был удален");
         }
         else{
