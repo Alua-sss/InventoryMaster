@@ -1,19 +1,19 @@
 package menu;
+import controllers.UserController;
 import controllers.interfaces.IUserController;
 import menu.interfaces.Menu;
+import repositories.UserRepository;
+import repositories.interfaces.IUserRepository;
 import services.AuthService;
 import java.util.Scanner;
 
 public class AuthMenu implements Menu {
 
-    private final IUserController userController;
-
-    public AuthMenu(IUserController userController) {
-        this.userController = userController;
-    }
-
     @Override
     public void onLoad() {
+
+        IUserRepository userRepository = new UserRepository();
+        IUserController userController = new UserController(userRepository);
 
         AuthService authService = AuthService.getInstance();
         Scanner scanner = new Scanner(System.in);
@@ -38,8 +38,10 @@ public class AuthMenu implements Menu {
                     authService.login(userController.getUser(username), password);
 
                     if (authService.isLoggedIn()){
+
                         MainMenu mainMenu = new MainMenu();
                         mainMenu.onLoad();
+
                     }
                     break;
 
@@ -49,7 +51,7 @@ public class AuthMenu implements Menu {
                     System.out.print("Пароль: ");
                     String newPassword = scanner.nextLine();
 
-                    userController.registerUser(newUsername, newPassword);
+                    System.out.println(userController.registerUser(newUsername, newPassword));
                     break;
 
                 case 3:

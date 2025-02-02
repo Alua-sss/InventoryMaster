@@ -2,9 +2,12 @@ package data;
 
 import data.interfaces.IDB;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class PostgresDB implements IDB {
     private String host;
@@ -12,17 +15,38 @@ public class PostgresDB implements IDB {
     private String password;
     private String dbName;
 
+    private static IDB instance;
+
     private Connection connection;
 
-    public PostgresDB(String host, String username, String password, String dbName) {
-        setHost(host);
-        setUsername(username);
-        setPassword(password);
-        setDbName(dbName);
+    private PostgresDB() {
+        Properties props = loadProperties();
+
+        setHost(props.getProperty("db.url"));
+        setUsername(props.getProperty("db.user"));
+        setPassword(props.getProperty("db.password"));
+        setDbName(props.getProperty("db.name"));
+
     }
 
+    private Properties loadProperties() {
 
+        Properties props = new Properties();
+        try (FileInputStream fis = new FileInputStream("app/config/db.properties")) {
+            props.load(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Ошибка загрузки конфигурации базы данных.");
+        }
+        return props;
+    }
 
+    public static PostgresDB getInstance() {
+        if (instance == null) {
+            instance = new PostgresDB();
+        }
+        return (PostgresDB) instance;
+    }
 
     @Override
     public Connection getConnection() {
@@ -32,10 +56,8 @@ public class PostgresDB implements IDB {
                 return connection;
             }
 
-            // Here we load the driver’s class file into memory at the runtime
             Class.forName("org.postgresql.Driver");
 
-            // Establish the connection
             connection = DriverManager.getConnection(connectionUrl, username, password);
 
             return connection;

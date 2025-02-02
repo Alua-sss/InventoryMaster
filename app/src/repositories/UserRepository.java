@@ -1,5 +1,6 @@
 package repositories;
 
+import data.PostgresDB;
 import data.interfaces.IDB;
 import models.User;
 import repositories.interfaces.IUserRepository;
@@ -10,11 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserRepository implements IUserRepository  {
-    private final IDB db;
-
-    public UserRepository(IDB db) {
-        this.db = db;
-    }
+    IDB db = PostgresDB.getInstance();
 
     @Override
     public boolean userExists(String username) {
