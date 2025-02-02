@@ -15,7 +15,6 @@ public class UserController implements IUserController {
     public String registerUser(String username, String password) {
         User user = new User(0, username, password, "USER");
         boolean success = repo.registerUser(user);
-
         return success ? "Пользователь успешно зарегистрирован!" : "Ошибка при регистрации пользователя.";
     }
 

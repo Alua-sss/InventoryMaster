@@ -5,7 +5,11 @@ import data.PostgresDB;
 import data.interfaces.IDB;
 import menu.AuthMenu;
 
+import models.Product;
+import repositories.ProductRepository;
 import repositories.UserRepository;
+
+import repositories.interfaces.IProductRepository;
 import repositories.interfaces.IUserRepository;
 
 
@@ -13,18 +17,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-        IDB db = new PostgresDB("jdbc:postgresql://localhost:5432", "postgres", "new_password", "inventorymaster");
-        db.getConnection();
-
-
-        IUserRepository userRepository = new UserRepository(db);
-        IUserController userController = new UserController(userRepository);
-
-
-        AuthMenu authMenu = new AuthMenu(userController);
+        AuthMenu authMenu = new AuthMenu();
         authMenu.onLoad();
 
-
+        IDB db = PostgresDB.getInstance();
         db.close();
     }
 

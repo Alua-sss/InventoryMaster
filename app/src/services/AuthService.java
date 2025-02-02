@@ -1,18 +1,14 @@
 package services;
-import models.User;
 
-import java.util.HashMap;
-import java.util.Map;
+import models.User;
 
 public class AuthService {
 
     private static AuthService instance;
-    private Map<String, User> users = new HashMap<>();
     private User currentUser = null;
 
 
-    private AuthService() {
-    }
+    private AuthService() {}
 
     public static AuthService getInstance() {
         if (instance == null) {

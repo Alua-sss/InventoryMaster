@@ -5,22 +5,19 @@ public class Product {
     private String name;
     private double price;
     private int quantity;
-    private int minQuantity;
 
 
-    public Product(int id, String name, double price, int quantity, int minQuantity) {
+    public Product(int id, String name, double price, int quantity) {
         setId(id);
         setName(name);
         setPrice(price);
         setQuantity(quantity);
-        setMinQuantity(minQuantity);
     }
 
     public Product(String name, double price, int quantity) {
         setName(name);
         setPrice(price);
         setQuantity(quantity);
-        setMinQuantity(minQuantity);
     }
 
     public int getId() {
@@ -55,17 +52,9 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public int getMinQuantity() {
-        return minQuantity;
-    }
-
-    public void setMinQuantity(int minQuantity) {
-        this.minQuantity = minQuantity;
-    }
-
 
     @Override
     public String toString() {
-        return "Product id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity + ", minQuantity=" + minQuantity;
+        return "Product id=" + id + ", name=" + name + ", price=" + price + ", quantity=" + quantity;
     }
 }

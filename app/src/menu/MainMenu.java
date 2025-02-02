@@ -1,16 +1,28 @@
 package menu;
 
+import controllers.ProductController;
+import controllers.interfaces.IProductController;
 import menu.interfaces.Menu;
 import models.Warehouse;
 
 import models.Product;
+import repositories.ProductRepository;
+import repositories.interfaces.IProductRepository;
 import services.AuthService;
+import services.ProductService;
+import services.interfaces.IProductService;
 
 import java.util.Scanner;
 
 public class MainMenu implements Menu {
+
+
     @Override
     public void onLoad() {
+
+        IProductRepository productRepository = new ProductRepository();
+        IProductService productService = new ProductService(productRepository);
+        IProductController productController = new ProductController(productService);
 
         AuthService authService = AuthService.getInstance();
 
@@ -22,10 +34,9 @@ public class MainMenu implements Menu {
             System.out.println("1. Показать все товары");
             System.out.println("2. Добавить товар (только Admin)");
             System.out.println("3. Удалить товар (только Admin)");
-            System.out.println("4. Показать товары с низкими запасами");
-            System.out.println("5. Общая стоимость товаров");
-            System.out.println("6. Изменить товар");
-            System.out.println("7. Выйти");
+            System.out.println("4. Поиск товара");
+            System.out.println("5. Изменить товар");
+            System.out.println("6. Назад");
             System.out.print("Выберите опцию: ");
 
             int choice = scanner.nextInt();
@@ -33,7 +44,7 @@ public class MainMenu implements Menu {
 
             switch (choice) {
                 case 1:
-                    System.out.println(warehouse.getProducts());
+                    productController.getAllProducts();
                     break;
 
                 case 2:
@@ -41,19 +52,7 @@ public class MainMenu implements Menu {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
-                    System.out.print("Введите ID: ");
-                    int id = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Введите название: ");
-                    String name = scanner.nextLine();
-                    System.out.print("Введите количество: ");
-                    int quantity = scanner.nextInt();
-                    System.out.print("Введите цену: ");
-                    double price = scanner.nextDouble();
-                    System.out.print("Введите минимальное количество: ");
-                    int minQuantity = scanner.nextInt();
-
-                    warehouse.addProduct(new Product(id, name, price, quantity, minQuantity));
+                   productController.addProduct();
                     break;
 
                 case 3:
@@ -61,29 +60,22 @@ public class MainMenu implements Menu {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
-                    System.out.print("Введите ID товара для удаления: ");
-                    int removeId = scanner.nextInt();
-                    warehouse.removeProduct(removeId);
+                    productController.deleteProduct();
                     break;
+
                 case 4:
-                    warehouse.getLowStockProducts();
+                    productController.getProductById();
                     break;
 
                 case 5:
-                    double totalValue = warehouse.calculateTotalValue();
-                    System.out.println("Общая стоимость товаров: " + totalValue);
-                    break;
-
-                case 6:
                     if (!authService.isAdmin()) {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
-                    new UpdateMenu(warehouse).onLoad();
-                    break;
+                   productController.updateProduct();
+                   break;
 
-                case 7:
-                    authService.logout();
+                case 6:
                     return;
 
                 default:
