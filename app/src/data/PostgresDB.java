@@ -63,7 +63,6 @@ public class PostgresDB implements IDB {
             return connection;
         } catch (Exception e) {
             System.out.println("failed to connect to postgres: " + e.getMessage());
-
             return null;
         }
     }

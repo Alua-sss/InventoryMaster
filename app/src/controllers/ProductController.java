@@ -74,7 +74,7 @@ public class ProductController implements IProductController {
         if (!products.isEmpty()) {
             System.out.println("Список продуктов:");
             for (Product product : products) {
-                System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + "Категория: " + product.getCategory().getName());
+                System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + " Категория: " + product.getCategory().getName());
             }
         } else {
             System.out.println("Список пуст");

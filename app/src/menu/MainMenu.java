@@ -1,16 +1,16 @@
 package menu;
 
 import controllers.ProductController;
+import controllers.UserController;
 import controllers.interfaces.IProductController;
+import controllers.interfaces.IUserController;
 import menu.interfaces.Menu;
-import models.Warehouse;
 
-import models.Product;
+import models.User;
 import repositories.CategoryRepository;
 import repositories.ProductRepository;
 import repositories.interfaces.ICategoryRepository;
 import repositories.interfaces.IProductRepository;
-import services.AuthService;
 import services.CategoryService;
 import services.ProductService;
 import services.interfaces.ICategoryService;
@@ -19,6 +19,11 @@ import services.interfaces.IProductService;
 import java.util.Scanner;
 
 public class MainMenu implements Menu {
+    private final IUserController userController;
+
+    public MainMenu(IUserController userController) {
+        this.userController = userController;
+    }
 
 
     @Override
@@ -31,8 +36,7 @@ public class MainMenu implements Menu {
 
         IProductController productController = new ProductController(productService, categoryService);
 
-        AuthService authService = AuthService.getInstance();
-
+        User currentUser = userController.getCurrentUser();
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -54,15 +58,14 @@ public class MainMenu implements Menu {
                     break;
 
                 case 2:
-                    if (!authService.isAdmin()) {
+                    if (!currentUser.getRole().equals("admin")) {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
                    productController.addProduct();
                     break;
-
                 case 3:
-                    if (!authService.isAdmin()) {
+                    if (!currentUser.getRole().equals("admin")) {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
@@ -74,7 +77,7 @@ public class MainMenu implements Menu {
                     break;
 
                 case 5:
-                    if (!authService.isAdmin()) {
+                    if (!currentUser.getRole().equals("admin")) {
                         System.out.println("Недостаточно прав для выполнения этой операции.");
                         break;
                     }
