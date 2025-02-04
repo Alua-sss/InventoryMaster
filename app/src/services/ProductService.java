@@ -53,7 +53,6 @@ public class ProductService implements IProductService {
 
     @Override
     public boolean updateProduct(Product product) {
-        repo.updateProduct(product);
-        return true;
+        return repo.updateProduct(product);
     }
 }
