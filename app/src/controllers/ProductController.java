@@ -3,9 +3,10 @@ package controllers;
 import controllers.interfaces.IProductController;
 import models.Category;
 import models.Product;
-import services.CategoryService;
 import services.interfaces.ICategoryService;
 import services.interfaces.IProductService;
+
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,6 +15,8 @@ public class ProductController implements IProductController {
     private final IProductService productService;
     private final ICategoryService categoryService;
 
+    private final Scanner scanner   = new Scanner(System.in);
+
     public ProductController(IProductService productService, ICategoryService categoryService) {
         this.productService = productService;
         this.categoryService = categoryService;
@@ -21,104 +24,120 @@ public class ProductController implements IProductController {
 
     @Override
     public void addProduct() {
-        System.out.println("\n*********************************************************************");
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Введите название: ");
-        String name = scanner.nextLine();
-        System.out.print("Введите количество: ");
-        int quantity = scanner.nextInt();
-        System.out.print("Введите цену: ");
-        double price = scanner.nextDouble();
+        try {
+            System.out.println("\n----------");
+            System.out.print("Enter product name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter product price: ");
+            double price = scanner.nextDouble();
+            System.out.print("Enter product quantity: ");
+            int quantity = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.println("Список категорий:");
-        System.out.println("*********************************************************************");
-        System.out.println("Выберите id:");
-        List<Category> categories = categoryService.getAllCategories();
-        for (Category category : categories) {
-            System.out.println(category.getId() + ": " + category.getName());
+            System.out.print("\nChoose a category for the product: ");
+            List<Category> categories = categoryService.getAllCategories();
+
+
+            System.out.println("\n----------");
+            if (categories.isEmpty()) {
+                System.out.println("There are no categories. Add the category first.");
+                return;
+            }
+            for (Category category : categories) {
+                System.out.println(category.getId() + ": " + category.getName());
+            }
+            System.out.println("----------");
+
+
+            System.out.print("\nEnter id category: ");
+            int categoryId = scanner.nextInt();
+            Category selectedCategory = categoryService.getCategoryById(categoryId);
+
+            if (selectedCategory == null) {
+                System.out.println("\n" +
+                        "Category with such ID was not found.");
+                return;
+            }
+            Product product = new Product(name, price, quantity, selectedCategory);
+            if (productService.addProduct(product)) {
+                System.out.println("Product added");
+            }else{
+                System.out.println("Error when adding a product.");
+            }
+            System.out.println("----------");
         }
-        System.out.println("*********************************************************************");
-
-        int categoryId = scanner.nextInt();
-        scanner.nextLine();
-        Category category = categoryService.getCategoryById(categoryId);
-
-        if (productService.addProduct(new Product(name, price, quantity, category))) {
-            System.out.println("Продукт был создан");
-        } else {
-            System.out.println("Ошибка");
+        catch (InputMismatchException e) {
+            System.out.println("Please enter a valid product name.");
+            scanner.nextLine();
+        }catch (IllegalArgumentException e) {
+            System.out.println("Wrong" + e.getMessage());
         }
-        System.out.println("*********************************************************************");
     }
 
     @Override
     public void getProductById() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n*********************************************************************");
-        System.out.print("Введите id: ");
+        System.out.println("\n----------");
+        System.out.print("Enter id: ");
         int id = scanner.nextInt();
         Product product = productService.getProductById(id);
         if (product != null) {
-            System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + " Категория: " + product.getCategory().getName());
+            System.out.println(product);
         } else {
-            System.out.println("Ошибка");
+            System.out.println("Error when getting product by id.");
         }
-        System.out.println("*********************************************************************");
+        System.out.println("----------");
     }
 
     @Override
     public void getAllProducts() {
-        List<Product> products;
-        products = productService.getAllProducts();
-        System.out.println("\n*********************************************************************");
-        if (!products.isEmpty()) {
-            System.out.println("Список продуктов:");
-            for (Product product : products) {
-                System.out.println("ID: " + product.getId() + " Название: " + product.getName() + " Цена: " + product.getPrice() + " Количество: " + product.getQuantity() + "Категория: " + product.getCategory().getName());
-            }
+        List<Product> products = productService.getAllProducts();
+        System.out.println("\n----------");
+        if (products.isEmpty()) {
+            System.out.println("The list is empty");
         } else {
-            System.out.println("Список пуст");
+            for (Product product : products) {
+                System.out.println(product);
+            }
         }
-        System.out.println("*********************************************************************");
+        System.out.println("----------");
     }
 
     @Override
     public void updateProduct() {
-        System.out.print("Введите ID: ");
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("\n----------");
+        System.out.print("Enter id: ");
         int id = scanner.nextInt();
-        scanner.nextLine();
-        Product currentProduct = productService.getProductById(id);
-        productService.updateProduct(currentProduct);
 
+        Product currentProduct = productService.getProductById(id);
         if (currentProduct == null) {
-            System.out.println("Товар с ID " + id + " не найден.");
+            System.out.println("Product with ID: " + id + " not found");
             return;
         }
 
         while (true) {
-            System.out.println("\nЧто вы хотите поменять?");
-            System.out.println("1. Название");
-            System.out.println("2. Количество товара");
-            System.out.println("3. Цену");
-            System.out.println("4. Сохранить и назад");
-            System.out.print("Выберите опцию: ");
+            System.out.println("\n----------");
+            System.out.println("What do you want to change?");
+            System.out.println("1. Name");
+            System.out.println("2. Quantity");
+            System.out.println("3. Price");
+            System.out.println("4. Save and back");
+            System.out.print("Choose the action: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    System.out.print("Введите название: ");
+                    System.out.print("Enter product name: ");
                     String name = scanner.nextLine();
                     currentProduct.setName(name);
                     break;
                 case 2:
-                    System.out.println("Введите количество товара: ");
+                    System.out.println("Enter product quantity: ");
                     int quantity = scanner.nextInt();
                     currentProduct.setQuantity(quantity);
                     break;
                 case 3:
-                    System.out.println("Введите цену: ");
+                    System.out.println("Enter product price: ");
                     double price = scanner.nextDouble();
                     currentProduct.setPrice(price);
                     break;
@@ -132,17 +151,16 @@ public class ProductController implements IProductController {
     }
     @Override
     public void deleteProduct() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("\n*********************************************************************");
-        System.out.print("Введите id: ");
+        System.out.println("\n----------");
+        System.out.print("Enter id: ");
         int id = scanner.nextInt();
         if(productService.deleteProduct(id)){
-            System.out.println("Товар был удален");
+            System.out.println("Product is removed");
         }
         else{
-            System.out.println("Ошибка");
+            System.out.println("Error");
         }
-        System.out.println("*********************************************************************");
+        System.out.println("----------");
     }
 }
 

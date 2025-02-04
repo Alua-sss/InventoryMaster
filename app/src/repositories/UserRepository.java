@@ -18,10 +18,6 @@ public class UserRepository implements IUserRepository  {
         Connection conn = null;
         try {
             conn = db.getConnection();
-            if (conn == null) {
-                System.out.println("Connection is null");
-                return false;
-            }
             String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, username);
@@ -38,22 +34,15 @@ public class UserRepository implements IUserRepository  {
 
 
     @Override
-    public boolean registerUser(User user) {
+    public boolean addUser(User user) {
 
         if (userExists(user.getUsername())) {
             return false;
         }
 
         Connection conn = null;
-
         try {
-
             conn = db.getConnection();
-
-            if (conn == null) {
-                System.out.println("Connection is null");
-                return false;
-            }
 
             String sql = "INSERT INTO users(username, password) VALUES (?, ?)";
             PreparedStatement st = conn.prepareStatement(sql);
@@ -71,12 +60,12 @@ public class UserRepository implements IUserRepository  {
     }
 
     @Override
-    public User getUser(String username) {
-        Connection con = null;
+    public User getUserByUsername(String username) {
+        Connection conn = null;
         try {
-            con = db.getConnection();
+            conn = db.getConnection();
             String sql = "SELECT id,username,password,role FROM users WHERE username=?";
-            PreparedStatement st = con.prepareStatement(sql);
+            PreparedStatement st = conn.prepareStatement(sql);
 
             st.setString(1, username);
 

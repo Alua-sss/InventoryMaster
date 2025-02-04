@@ -17,16 +17,15 @@ public class ProductService implements IProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        List<Product> products = repo.getAllProducts();
-        return products;
+        return repo.getAllProducts();
     }
 
     @Override
     public boolean addProduct(Product product) {
         if(product.getPrice() < 0){
-            System.out.println("Некорректное значение цены");
+            System.out.println("Incorrect price value");
             if (product.getQuantity() < 0) {
-                System.out.println("Некорректное значение цены");
+                System.out.println("Incorrect price value");
                 return false;
             }
             return false;
@@ -37,7 +36,7 @@ public class ProductService implements IProductService {
     @Override
     public boolean deleteProduct(int id) {
         if (id < 1 ) {
-            System.out.println("Некорректное значение id");
+            System.out.println("Incorrect value of ID");
             return false;
         }
        return repo.deleteProduct(id);
@@ -46,7 +45,7 @@ public class ProductService implements IProductService {
     @Override
     public Product getProductById(int id) {
         if (id < 1 ) {
-            System.out.println("Некорректное значение id");
+            System.out.println("Incorrect value of ID");
             return null;
         }
         return repo.getProductById(id);
@@ -54,7 +53,6 @@ public class ProductService implements IProductService {
 
     @Override
     public boolean updateProduct(Product product) {
-        repo.updateProduct(product);
-        return true;
+        return repo.updateProduct(product);
     }
 }

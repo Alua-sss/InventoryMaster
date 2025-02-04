@@ -2,30 +2,67 @@ package controllers;
 
 import controllers.interfaces.IUserController;
 import models.User;
-import repositories.interfaces.IUserRepository;
+import services.interfaces.IUserService;
+
+import java.util.Scanner;
 
 public class UserController implements IUserController {
-    private final IUserRepository repo;
+    private final IUserService userService;
+    private final Scanner scanner = new Scanner(System.in);
+    private User currentUser;
 
-    public UserController(IUserRepository repo) {
-        this.repo = repo;
+    public UserController(IUserService userService) {
+        this.userService = userService;
     }
 
     @Override
-    public String registerUser(String username, String password) {
-        User user = new User(0, username, password, "USER");
-        boolean success = repo.registerUser(user);
-        return success ? "Пользователь успешно зарегистрирован!" : "Ошибка при регистрации пользователя.";
-    }
+    public void registerUser() {
+        System.out.println("Please enter your username: ");
+        String userName = scanner.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scanner.nextLine();
 
+        User user = new User(userName, password);
 
-    @Override
-    public User getUser(String username) {
-        User user = repo.getUser(username);
-        if (user == null) {
-            System.out.println("Пользователь не найден");
-            return null;
+        if (userService.registerUser(user)) {
+            System.out.println("User successfully registered!");
+        }else {
+            System.out.println("Error when registering!");
         }
-        return user;
     }
+
+
+    @Override
+    public void login() {
+        System.out.println("Please enter your username: ");
+        String userName = scanner.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scanner.nextLine();
+
+        User user = userService.login(userName, password);
+        if (user != null) {
+            System.out.println("User successfully logged in!");
+            currentUser = user;
+        } else {
+            System.out.println("Error when logging in!");
+        }
+    }
+
+    @Override
+    public void logoutUser() {
+        if(currentUser != null) {
+            System.out.println("User successfully logged out!");
+            currentUser = null;
+        }
+        else {
+            System.out.println("No one entered the system!");
+        }
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+
 }
