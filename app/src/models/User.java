@@ -17,6 +17,12 @@ public class User {
         setRole(role);
     }
 
+    public User(int id,String username, String role) {
+        setId(id);
+        setUsername(username);
+        setRole(role);
+    }
+
     public User(int id, String username, String password, String role) {
         setId(id);
         setUsername(username);
