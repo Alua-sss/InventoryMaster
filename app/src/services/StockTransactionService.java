@@ -22,24 +22,30 @@ public class StockTransactionService implements IStockTransactionService {
 
     @Override
     public boolean recordTransaction(StockTransaction transaction) {
+        Product product = transaction.getProduct();
 
-        if (Objects.equals(transaction.getTransactionType(), "IN")) {
-           Product product = transaction.getProduct();
-           product.setQuantity(product.getQuantity() + transaction.getQuantity());
-           productService.updateProduct(product);
+        switch (transaction.getTransactionType()) {
+            case "IN" -> {
+                product.setQuantity(product.getQuantity() + transaction.getQuantity());
+                productService.updateProduct(product);
+            }
+            case "OUT" -> {
+                if (product.getQuantity() < transaction.getQuantity()) {
+                    System.out.println("Недостаточное количество товара на складе.");
+                    return false;
+                }
+                product.setQuantity(product.getQuantity() - transaction.getQuantity());
+                productService.updateProduct(product);
+            }
+            default -> {
+                System.out.println(" Некорректный тип транзакции!");
+                return false;
+            }
         }
-        if (Objects.equals(transaction.getTransactionType(), "OUT")) {
-            Product product = transaction.getProduct();
-            product.setQuantity(product.getQuantity() - transaction.getQuantity());
-            productService.updateProduct(product);
-        } else {
-            System.out.println("Wrong!");
-            return false;
-        }
 
-       return stockTransactionRepository.addTransaction(transaction);
-
+        return stockTransactionRepository.addTransaction(transaction);
     }
+
 
     @Override
     public List<StockTransaction> getFullStockTransactionDetails(int productId) {
