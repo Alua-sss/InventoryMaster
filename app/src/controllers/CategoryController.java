@@ -22,9 +22,7 @@ public class CategoryController implements ICategoryController {
         try {
             System.out.print("Enter the name of the category: ");
             String name = scanner.nextLine();
-
-            Category category = new Category(name);
-            if (categoryService.addCategory(category)) {
+            if (categoryService.addCategory(name)) {
                 System.out.println("The category is successfully added!");
             } else {
                 System.out.println("Error when adding a category.");
@@ -46,7 +44,6 @@ public class CategoryController implements ICategoryController {
             System.out.println("The list of categories is empty.");
         } else {
             System.out.println("The list of categories is:");
-
             for (Category category : categories) {
                 System.out.println(category.getId() + ": " + category.getName());
             }

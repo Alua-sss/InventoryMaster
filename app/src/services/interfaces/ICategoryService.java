@@ -5,7 +5,7 @@ import models.Category;
 import java.util.List;
 
 public interface ICategoryService {
-    boolean addCategory(Category category);
+    boolean addCategory(String categoryName);
     Category getCategoryById(int id);
     List<Category> getAllCategories();
 }

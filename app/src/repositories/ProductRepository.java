@@ -78,15 +78,20 @@ public class ProductRepository implements IProductRepository {
             List<Product> products = new ArrayList<>();
             String sql = "SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id";
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            while (rs.next()) {
-                Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
-                Product product = new Product(rs.getInt("id"), rs.getString("name"), rs.getDouble("price"), rs.getInt("quantity"), category);
-                products.add(product);
+            try (ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));
+                    Product product = new Product(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getDouble("price"),
+                            rs.getInt("quantity"),
+                            category
+                    );
+                    products.add(product);
+                }
             }
             return products;
-
         } catch (SQLException e) {
             System.out.println("SQL error: " + e.getMessage());
         }
