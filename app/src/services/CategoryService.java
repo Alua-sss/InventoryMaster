@@ -16,8 +16,8 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public boolean addCategory(Category category) {
-        return repo.addCategory(category);
+    public boolean addCategory(String categoryName) {
+        return repo.addCategory(categoryName);
     }
 
     @Override

@@ -1,21 +1,26 @@
 package menu;
 
 import controllers.CategoryController;
+import controllers.FilterController;
 import controllers.ProductController;
-import controllers.UserController;
 import controllers.interfaces.ICategoryController;
+import controllers.interfaces.IFilterController;
 import controllers.interfaces.IProductController;
 import controllers.interfaces.IUserController;
 import menu.interfaces.Menu;
 
 import models.User;
 import repositories.CategoryRepository;
+import repositories.FilterRepository;
 import repositories.ProductRepository;
 import repositories.interfaces.ICategoryRepository;
+import repositories.interfaces.IFilterRepository;
 import repositories.interfaces.IProductRepository;
 import services.CategoryService;
+import services.FilterService;
 import services.ProductService;
 import services.interfaces.ICategoryService;
+import services.interfaces.IFilterService;
 import services.interfaces.IProductService;
 
 import java.util.Scanner;
@@ -31,15 +36,18 @@ public class MainMenu implements Menu {
     @Override
     public void onLoad() {
 
-        IProductRepository productRepository = new ProductRepository();
-        IProductService productService = new ProductService(productRepository);
-
         ICategoryRepository categoryRepository = new CategoryRepository();
         ICategoryService categoryService = new CategoryService(categoryRepository);
-
-
-        IProductController productController = new ProductController(productService, categoryService);
         ICategoryController categoryController = new CategoryController(categoryService);
+
+        IProductRepository productRepository = new ProductRepository();
+        IProductService productService = new ProductService(productRepository);
+        IProductController productController = new ProductController(productService, categoryService);
+
+        IFilterRepository filterRepository = new FilterRepository();
+        IFilterService filterService = new FilterService(filterRepository);
+        IFilterController filterController = new FilterController(filterService, categoryController);
+
 
         User currentUser = userController.getCurrentUser();
         Scanner scanner = new Scanner(System.in);
@@ -52,6 +60,7 @@ public class MainMenu implements Menu {
             System.out.println("4. Search product");
             System.out.println("5. Update product");
             System.out.println("6. Category management");
+            System.out.println("7. Filter");
             System.out.println("0. Back");
             System.out.print("Choose the action: ");
 
@@ -88,6 +97,10 @@ public class MainMenu implements Menu {
                         }
                         CategoryMenu categoryMenu = new CategoryMenu(categoryController);
                         categoryMenu.onLoad();
+                    }
+                    case 7 -> {
+                        FilterMenu filterMenu = new FilterMenu(filterController);
+                        filterMenu.onLoad();
                     }
                     case 0 -> {
                         return;

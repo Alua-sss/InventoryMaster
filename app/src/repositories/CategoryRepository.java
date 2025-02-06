@@ -13,7 +13,7 @@ public class CategoryRepository implements ICategoryRepository {
     IDB db = PostgresDB.getInstance();
 
     @Override
-    public boolean addCategory(Category category) {
+    public boolean addCategory(String categoryName) {
         Connection conn = null;
         try {
             conn = db.getConnection();
@@ -24,7 +24,7 @@ public class CategoryRepository implements ICategoryRepository {
 
             String sql = "INSERT INTO categories (name) VALUES (?)";
             PreparedStatement st = conn.prepareStatement(sql);
-            st.setString(1, category.getName());
+            st.setString(1, categoryName);
             st.execute();
 
             return true;
