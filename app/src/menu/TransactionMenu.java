@@ -16,12 +16,12 @@ public class TransactionMenu implements Menu {
     @Override
     public void onLoad() {
         while (true) {
-            System.out.println("\n--- Меню управления складом ---");
-            System.out.println("1. Добавить приход товара (IN)");
-            System.out.println("2. Добавить расход товара (OUT)");
-            System.out.println("3. Просмотреть историю транзакций по продукту");
-            System.out.println("0. Назад");
-            System.out.print("Выберите опцию: ");
+            System.out.println("\n--- Warehouse management menu ---");
+            System.out.println("1. Add the arrival of products (IN)");
+            System.out.println("2. Add products consumption (OUT)");
+            System.out.println("3. View the history of transactions by product");
+            System.out.println("0. Back");
+            System.out.print("Choose the action: ");
 
             try {
                 int choice = scanner.nextInt();
@@ -32,10 +32,10 @@ public class TransactionMenu implements Menu {
                     case 0 -> {
                         return;
                     }
-                    default -> System.out.println("Неверный выбор. Попробуйте снова.");
+                    default -> System.out.println("The wrong choice. Try it again.");
                 }
             } catch (Exception e) {
-                System.out.println("Некорректный ввод. Введите число.");
+                System.out.println("Incorrect input. Please enter the number.");
                 scanner.nextLine();
             }
         }

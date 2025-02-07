@@ -34,10 +34,10 @@ public class ProductController implements IProductController {
             int quantity = scanner.nextInt();
             scanner.nextLine();
 
+
+            //category надо бы как-то сократить или в отдельный метод положить
             System.out.print("\nChoose a category for the product: ");
             List<Category> categories = categoryService.getAllCategories();
-
-
             System.out.println("\n----------");
             if (categories.isEmpty()) {
                 System.out.println("There are no categories. Add the category first.");
@@ -48,29 +48,32 @@ public class ProductController implements IProductController {
             }
             System.out.println("----------");
 
-
             System.out.print("\nEnter id category: ");
             int categoryId = scanner.nextInt();
             Category selectedCategory = categoryService.getCategoryById(categoryId);
-
             if (selectedCategory == null) {
-                System.out.println("\n" +
-                        "Category with such ID was not found.");
+                System.out.println("Category with such ID was not found.");
                 return;
             }
+            //сatefory
+
+
             Product product = new Product(name, price, quantity, selectedCategory);
             if (productService.addProduct(product)) {
                 System.out.println("Product added");
+                scanner.nextLine();
+
             }else{
                 System.out.println("Error when adding a product.");
+                scanner.nextLine();
+
             }
             System.out.println("----------");
         }
+
         catch (InputMismatchException e) {
-            System.out.println("Please enter a valid product name.");
+            System.out.println("Please enter a valid value.");
             scanner.nextLine();
-        }catch (IllegalArgumentException e) {
-            System.out.println("Wrong" + e.getMessage());
         }
     }
 
@@ -110,7 +113,7 @@ public class ProductController implements IProductController {
 
         Product currentProduct = productService.getProductById(id);
         if (currentProduct == null) {
-            System.out.println("Product with ID: " + id + " not found");
+            System.out.println("Product not found");
             return;
         }
 

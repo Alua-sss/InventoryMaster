@@ -66,7 +66,7 @@ public class FilterController implements IFilterController {
         System.out.print("Enter the maximum quantity: ");
         int maxQuantity = scanner.nextInt();
         scanner.nextLine();
-        List<Product> products =filterService.getProductsByQuantityRange(minQuantity, maxQuantity);
+        List<Product> products = filterService.getProductsByQuantityRange(minQuantity, maxQuantity);
         System.out.println("\n----------");
         if (products.isEmpty()) {
             System.out.println("The list is empty");

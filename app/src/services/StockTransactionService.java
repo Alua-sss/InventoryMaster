@@ -13,8 +13,8 @@ import java.util.Objects;
 
 public class StockTransactionService implements IStockTransactionService {
     private final IStockTransactionRepository stockTransactionRepository;
-    private IProductRepository productRepository = new ProductRepository();
-    private IProductService productService = new ProductService(productRepository);
+    private final IProductRepository productRepository = new ProductRepository();
+    private final IProductService productService = new ProductService(productRepository);
 
     public StockTransactionService(IStockTransactionRepository stockTransactionRepository) {
         this.stockTransactionRepository = stockTransactionRepository;
@@ -26,19 +26,23 @@ public class StockTransactionService implements IStockTransactionService {
 
         switch (transaction.getTransactionType()) {
             case "IN" -> {
+                if (transaction.getQuantity() <= 0){
+                    System.out.println("Incorrect quantity");
+                    return false;
+                }
                 product.setQuantity(product.getQuantity() + transaction.getQuantity());
                 productService.updateProduct(product);
             }
             case "OUT" -> {
-                if (product.getQuantity() < transaction.getQuantity()) {
-                    System.out.println("Недостаточное количество товара на складе.");
+                if (product.getQuantity() < transaction.getQuantity() || transaction.getQuantity() <= 0) {
+                    System.out.println("Not enough stock or incorrect quantity");
                     return false;
                 }
                 product.setQuantity(product.getQuantity() - transaction.getQuantity());
                 productService.updateProduct(product);
             }
             default -> {
-                System.out.println(" Некорректный тип транзакции!");
+                System.out.println("Invalid transaction type.");
                 return false;
             }
         }
@@ -48,7 +52,11 @@ public class StockTransactionService implements IStockTransactionService {
 
 
     @Override
-    public List<StockTransaction> getFullStockTransactionDetails(int productId) {
-        return stockTransactionRepository.getFullStockTransactionDetails(productId);
+    public List<StockTransaction> getFullStockTransactionDetails(int id) {
+        if (id < 1 ) {
+            System.out.println("Incorrect value of ID");
+            return null;
+        }
+        return stockTransactionRepository.getFullStockTransactionDetails(id);
     }
 }

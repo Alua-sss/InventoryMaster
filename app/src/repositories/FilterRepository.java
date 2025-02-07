@@ -61,6 +61,7 @@ public class FilterRepository implements IFilterRepository {
             for (int i = 0; i < params.length; i++) {
                 st.setObject(i + 1, params[i]);
             }
+
             try (ResultSet rs = st.executeQuery()) {
                 while (rs.next()) {
                     Category category = new Category(rs.getInt("category_id"), rs.getString("category_name"));

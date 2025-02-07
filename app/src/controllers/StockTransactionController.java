@@ -27,47 +27,50 @@ public class StockTransactionController implements IStockTransactionController {
 
     @Override
     public void recordTransaction(String transactionType) {
-        System.out.print("Введите ID продукта: ");
+        System.out.print("Enter the product ID: ");
         int productId = scanner.nextInt();
         if (productService.getProductById(productId) == null) {
-            System.out.println("Такого продукта нет");
+            System.out.println("Product not found");
             return;
         }
         Product product = productService.getProductById(productId);
-        System.out.print("Введите количество: ");
+        System.out.print("Enter the quantity: ");
         int quantity = scanner.nextInt();
         User user = userController.getCurrentUser();
         scanner.nextLine();
         StockTransaction transaction = new StockTransaction(product, user, quantity, transactionType);
         if (stockTransactionService.recordTransaction(transaction)) {
-            System.out.println("Транзакция успешно сохранена!");
+            System.out.println("The transaction is successfully saved!");
         } else {
-            System.out.println("Ошибка при записи транзакции.");
+            System.out.println("An error when recording a transaction.");
         }
     }
 
+
     @Override
     public void getFullStockTransactionDetails() {
-        System.out.print("Введите ID продукта: ");
+        System.out.print("Enter the product ID: ");
         int productId = scanner.nextInt();
         if (productService.getProductById(productId) == null) {
-            System.out.println("Такого продукта нет");
+            System.out.println("Product not found");
             return;
         }
+
+
         List<StockTransaction> transactions = stockTransactionService.getFullStockTransactionDetails(productId);
         if (transactions.isEmpty()) {
-            System.out.println("Нет транзакций для данного продукта.");
+            System.out.println("There are no transactions for this product.");
         } else {
-            System.out.println("\n--- Детали транзакций ---");
+            System.out.println("\n--- Details of transactions ---");
             for (StockTransaction transaction : transactions) {
                 System.out.println(
                         "ID: " + transaction.getId() +
-                                ", Продукт: " + transaction.getProduct().getName() +
-                                " (" + transaction.getProduct().getCategory().getName() + ")" +
-                                ", Количество: " + transaction.getQuantity() +
-                                ", Тип операции: " + transaction.getTransactionType() +
-                                ", Работник: " + transaction.getUser().getUsername() +
-                                ", Дата: " + transaction.getTimestamp()
+                                ", Product: " + transaction.getProduct().getName() +
+                                ", Category: " + transaction.getProduct().getCategory().getName() +
+                                ", Quantity: " + transaction.getQuantity() +
+                                ", Type transactions: " + transaction.getTransactionType() +
+                                ", User: " + transaction.getUser().getUsername() +
+                                ", Date: " + transaction.getTimestamp()
                 );
             }
     }

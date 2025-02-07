@@ -58,13 +58,13 @@ public class MainMenu implements Menu {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("\n--- Main Menughjk ---");
+            System.out.println("\n--- Main Menu ---");
             System.out.println("1. Show all products");
             System.out.println("2. Add product (Admin)");
             System.out.println("3. Delete product (Admin)");
             System.out.println("4. Search product");
-            System.out.println("5. Update product");
-            System.out.println("6. Category management");
+            System.out.println("5. Update product(Admin)");
+            System.out.println("6. Category management(Admin)");
             System.out.println("7. Transaction management");
             System.out.println("8. Filter");
             System.out.println("0. Back");
@@ -115,7 +115,7 @@ public class MainMenu implements Menu {
                     case 0 -> {
                         return;
                     }
-                    default -> System.out.println("Invalid choice");
+                    default -> System.out.println("The wrong choice. Try it again.");
                 }
             } catch (Exception e) {
                 System.out.println("Incorrect input. Please enter the number.");
