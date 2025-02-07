@@ -64,5 +64,4 @@ public class UserController implements IUserController {
         return currentUser;
     }
 
-
 }

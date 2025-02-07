@@ -32,29 +32,28 @@ public class AuthMenu implements Menu {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (choice) {
+            try {
+                switch (choice) {
 
-               case 1 -> userController.registerUser();
-
-               case 2 -> {
-                   userController.login();
-                   MainMenu menu = new MainMenu(userController);
-                   menu.onLoad();
-               }
-
-               case 3 -> userController.logoutUser();
-
-               case 0 -> {
-                   System.out.println("Goodbye!");
-                   return;
-               }
-
-               default -> {
-                   System.out.println("Invalid choice");
-               }
+                    case 1 -> userController.registerUser();
+                    case 2 -> {
+                        userController.login();
+                        if(userController.getCurrentUser() != null) {
+                            MainMenu mainMenu = new MainMenu(userController);
+                            mainMenu.onLoad();
+                        }
+                    }
+                    case 3 -> userController.logoutUser();
+                    case 0 -> {System.out.println("Goodbye!");
+                        return;
+                    }
+                    default -> {System.out.println("The wrong choice. Try it again.");}
+                }
+            }catch(Exception e){
+                System.out.println("Incorrect input. Please enter the number.");
+                scanner.nextLine();
             }
         }
     }
-
 }
 

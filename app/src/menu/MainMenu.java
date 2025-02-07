@@ -3,25 +3,27 @@ package menu;
 import controllers.CategoryController;
 import controllers.FilterController;
 import controllers.ProductController;
-import controllers.interfaces.ICategoryController;
-import controllers.interfaces.IFilterController;
-import controllers.interfaces.IProductController;
-import controllers.interfaces.IUserController;
+import controllers.StockTransactionController;
+import controllers.interfaces.*;
 import menu.interfaces.Menu;
 
 import models.User;
 import repositories.CategoryRepository;
 import repositories.FilterRepository;
 import repositories.ProductRepository;
+import repositories.StockTransactionRepository;
 import repositories.interfaces.ICategoryRepository;
 import repositories.interfaces.IFilterRepository;
 import repositories.interfaces.IProductRepository;
+import repositories.interfaces.IStockTransactionRepository;
 import services.CategoryService;
 import services.FilterService;
 import services.ProductService;
+import services.StockTransactionService;
 import services.interfaces.ICategoryService;
 import services.interfaces.IFilterService;
 import services.interfaces.IProductService;
+import services.interfaces.IStockTransactionService;
 
 import java.util.Scanner;
 
@@ -48,6 +50,9 @@ public class MainMenu implements Menu {
         IFilterService filterService = new FilterService(filterRepository);
         IFilterController filterController = new FilterController(filterService, categoryController);
 
+        IStockTransactionRepository stockTransactionRepository = new StockTransactionRepository();
+        IStockTransactionService stockTransactionService = new StockTransactionService(stockTransactionRepository);
+        IStockTransactionController stockTransactionController = new StockTransactionController(stockTransactionService, productService, userController);
 
         User currentUser = userController.getCurrentUser();
         Scanner scanner = new Scanner(System.in);
@@ -58,9 +63,10 @@ public class MainMenu implements Menu {
             System.out.println("2. Add product (Admin)");
             System.out.println("3. Delete product (Admin)");
             System.out.println("4. Search product");
-            System.out.println("5. Update product");
-            System.out.println("6. Category management");
-            System.out.println("7. Filter");
+            System.out.println("5. Update product(Admin)");
+            System.out.println("6. Category management(Admin)");
+            System.out.println("7. Transaction management");
+            System.out.println("8. Filter");
             System.out.println("0. Back");
             System.out.print("Choose the action: ");
 
@@ -99,13 +105,17 @@ public class MainMenu implements Menu {
                         categoryMenu.onLoad();
                     }
                     case 7 -> {
+                        TransactionMenu transactionMenu = new TransactionMenu(stockTransactionController);
+                        transactionMenu.onLoad();
+                    }
+                    case 8 -> {
                         FilterMenu filterMenu = new FilterMenu(filterController);
                         filterMenu.onLoad();
                     }
                     case 0 -> {
                         return;
                     }
-                    default -> System.out.println("Invalid choice");
+                    default -> System.out.println("The wrong choice. Try it again.");
                 }
             } catch (Exception e) {
                 System.out.println("Incorrect input. Please enter the number.");
