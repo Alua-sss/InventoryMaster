@@ -6,7 +6,6 @@ import services.interfaces.IUserService;
 
 public class UserService implements IUserService {
    private final IUserRepository userRepository;
-   private User currentUser;
 
    public UserService(IUserRepository userRepository) {
        this.userRepository = userRepository;
@@ -16,7 +15,6 @@ public class UserService implements IUserService {
     public User login(String username, String password) {
         User user = userRepository.getUserByUsername(username);
         if(user != null && user.getPassword().equals(password)) {
-            currentUser = user;
             return user;
         }else{
             System.out.println("Invalid username or password");
@@ -36,8 +34,4 @@ public class UserService implements IUserService {
        return userRepository.addUser(user);
     }
 
-    @Override
-    public User getCurrentUser() {
-        return currentUser;
-    }
 }
